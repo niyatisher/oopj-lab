@@ -1,0 +1,37 @@
+class Solution {
+    public int divide(int dividend, int divisor) {
+        // Step 1: Handle overflow edge case
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+
+        // Step 2: Determine sign of the result
+        // True if signs differ (result will be negative)
+        boolean isNegative = (dividend < 0) ^ (divisor < 0);
+
+        // Step 3: Convert both numbers to negative to prevent overflow
+        if (dividend > 0) dividend = -dividend;
+        if (divisor > 0) divisor = -divisor;
+
+        int quotient = 0;
+
+        // Step 4: Exponential subtraction using bit shifts
+        // (Note: Since values are negative, 'dividend <= divisor' means dividend has larger absolute value)
+        while (dividend <= divisor) {
+            int tempDivisor = divisor;
+            int count = 1;
+
+            // Double tempDivisor as long as it doesn't underflow and remains >= dividend
+            // tempDivisor >= -1073741824 prevents overflow when left-shifted by 1 (Integer.MIN_VALUE / 2)
+            while (tempDivisor >= -1073741824 && dividend <= (tempDivisor << 1)) {
+                tempDivisor <<= 1;
+                count <<= 1;
+            }
+
+            dividend -= tempDivisor;
+            quotient += count;
+        }
+
+        return isNegative ? -quotient : quotient;
+    }
+}
