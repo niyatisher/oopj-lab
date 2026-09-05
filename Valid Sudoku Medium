@@ -1,0 +1,38 @@
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        // Arrays to store the bitmasks for rows, columns, and 3x3 boxes
+        int[] rows = new int[9];
+        int[] cols = new int[9];
+        int[] boxes = new int[9];
+        
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                char current = board[r][c];
+                if (current == '.') {
+                    continue;
+                }
+                
+                // Convert char digit '1'-'9' to a 0-indexed integer 0-8
+                int val = current - '1';
+                
+                // Create a bitmask with a 1 at the 'val' position
+                int mask = 1 << val;
+                
+                // Determine the 3x3 box index (0 to 8)
+                int boxIndex = (r / 3) * 3 + (c / 3);
+                
+                // If the bit is already set in row, col, or box, it's a duplicate
+                if ((rows[r] & mask) != 0 || (cols[c] & mask) != 0 || (boxes[boxIndex] & mask) != 0) {
+                    return false;
+                }
+                
+                // Record the digit by turning on the specific bit
+                rows[r] |= mask;
+                cols[c] |= mask;
+                boxes[boxIndex] |= mask;
+            }
+        }
+        
+        return true;
+    }
+}
