@@ -1,0 +1,17 @@
+class Solution {
+    public boolean canJump(int[] nums) {
+        // Start by targeting the last index
+        int goal = nums.length - 1;
+        
+        // Walk backwards from the second-to-last element to the first
+        for (int i = nums.length - 2; i >= 0; i--) {
+            // If we can reach the current goal from index i, shift the goal to i
+            if (i + nums[i] >= goal) {
+                goal = i;
+            }
+        }
+        
+        // If the goal shifted all the way back to the start, a path exists
+        return goal == 0;
+    }
+}
