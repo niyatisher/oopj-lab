@@ -1,0 +1,16 @@
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int[] dp = new int[n];
+        // Initialize the last row/column with 1s
+        java.util.Arrays.fill(dp, 1);
+        
+        // Iterate through each row from bottom to top (excluding the last row)
+        for (int i = 0; i < m - 1; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] += dp[j - 1];
+            }
+        }
+        
+        return dp[n - 1];
+    }
+}
