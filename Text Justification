@@ -1,0 +1,65 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> result = new ArrayList<>();
+        int i = 0;
+        int n = words.length;
+        
+        while (i < n) {
+            int lineLength = words[i].length();
+            int j = i + 1;
+            
+            // Find the maximum number of words that can fit in the current line
+            while (j < n && lineLength + 1 + words[j].length() <= maxWidth) {
+                lineLength += 1 + words[j].length();
+                j++;
+            }
+            
+            StringBuilder sb = new StringBuilder();
+            int numWords = j - i;
+            int numSpaces = maxWidth - (lineLength - (numWords - 1)); // Total space characters to distribute
+            
+            // Case 1: Last line or a line with only one word -> Left-justified
+            if (j == n || numWords == 1) {
+                for (int k = i; k < j; k++) {
+                    sb.append(words[k]);
+                    if (k < j - 1) {
+                        sb.append(" ");
+                    }
+                }
+                // Pad trailing spaces to meet maxWidth
+                while (sb.length() < maxWidth) {
+                    sb.append(" ");
+                }
+            } 
+            // Case 2: Fully-justified line
+            else {
+                int baseSpaces = numSpaces / (numWords - 1);
+                int extraSpaces = numSpaces % (numWords - 1);
+                
+                for (int k = i; k < j - 1; k++) {
+                    sb.append(words[k]);
+                    
+                    // Add base distributed spaces
+                    for (int s = 0; s < baseSpaces; s++) {
+                        sb.append(" ");
+                    }
+                    
+                    // Distribute remainder extra spaces from the left
+                    if (k - i < extraSpaces) {
+                        sb.append(" ");
+                    }
+                }
+                // Append the last word of the line without trailing spaces
+                sb.append(words[j - 1]);
+            }
+            
+            result.add(sb.toString());
+            i = j; // Move to the next line's starting word
+        }
+        
+        return result;
+    }
+}
