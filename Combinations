@@ -1,0 +1,33 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result, new ArrayList<>(), 1, n, k);
+        return result;
+    }
+
+    private void backtrack(List<List<Integer>> result, List<Integer> current, int start, int n, int k) {
+        // Base case: if the combination contains k numbers, add a copy to the results
+        if (current.size() == k) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        // Optimization/Pruning: 
+        // If there aren't enough remaining numbers to fill up to k elements, stop exploring
+        int elementsNeeded = k - current.size();
+        int elementsAvailable = n - start + 1;
+        if (elementsAvailable < elementsNeeded) {
+            return;
+        }
+
+        // Try each number from 'start' to 'n'
+        for (int i = start; i <= n; i++) {
+            current.add(i); // Choose the element
+            backtrack(result, current, i + 1, n, k); // Recurse with the next elements
+            current.remove(current.size() - 1); // Backtrack (remove the choice)
+        }
+    }
+}
